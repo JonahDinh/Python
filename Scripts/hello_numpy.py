@@ -8,3 +8,5 @@ digits = np.array([
 
 # The shape command prints the shape (in this case is is 3x3)
 print(digits.shape)
+
+# pip freeze will print out all of the packages
