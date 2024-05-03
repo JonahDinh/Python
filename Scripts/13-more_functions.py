@@ -60,3 +60,14 @@ user = create_user_profile("Wade", "Lahodea", role = "Instructor", program = "CS
 print(user)
 
 
+stuff = "foo"
+
+def do_stuff():
+    """Does stuff"""
+    print(f"Stuff is {stuff}")
+    my_stuff = "more stuff"
+
+do_stuff()
+stuff = "bar"
+do_stuff()
+# print(my_stuff)
