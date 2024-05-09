@@ -1,0 +1,68 @@
+import numpy as np
+from numpyhelpers import printnp
+
+# Arithmetic operations are applied elementwise. A new array is created and filled with the result
+a = np.array([10, 20, 30, 40])
+printnp(a)
+b = a - 1
+printnp(b)
+c = b * a
+printnp(c)
+
+# Do matrix multiplication with @
+first = np.array([[1, 1], [0, 1]])
+second = np.array([[2, 0], [3, 4]])
+printnp(first @ second)
+
+#Some operators Ilke or WII I act in place to modify an array rather than generate a new one
+ones = np.ones((2, 6))
+printnp(ones)
+one_two = np.array([1, 2, 1, 2, 1, 2])
+printnp(one_two)
+
+ones *= one_two
+printnp(ones)
+
+# Note that this is a case of "broadcasting" if the arrays are not of the same size,
+# the smalleris "broadcast" across the larger array. This actually what happens if you use a constant!
+print(ones + 10)
+
+# When can you broadcast?
+# You can broadcast when each dimension in both arrays are equal, or one of the dimensions is 1, matching from the *right*
+# Missing dimensions are assumed to be 1
+
+incompatible = np.array([
+    [
+        [1], [10], [100], [1000], [1000]
+    ],
+    [
+        [1],[1],[1],[1],[1]
+    ],
+])
+printnp(incompatible)
+# This will not work! ones is treated as because it has one less dimension,
+# and isn't compatible with (2,6,1)
+# print(ones + incompatible)
+
+# If we operate on arrays of different types, the result is going to get upcast to the more general or precise one
+int_array = np.array([1,2,3], dtype="int64")
+small_int_array = np.array([4,5,6], dtype="int8")
+printnp(int_array)
+printnp(small_int_array)
+printnp(int_array + small_int_array)
+float_array = np.array([7,8,9], dtype="float")
+
+printnp(int_array * float_array)
+
+# There are some functions whcih operate on a whole array
+numbers = np.array([[1,2,3,4,5], [10,20,30,40,50]])
+print("Numbers: ")
+printnp(numbers)
+print(numbers.sum())
+# ndarray.sum is equivilent to numpy.sum(ndarray)
+print(np.sum(numbers))
+
+print(numbers.flatten())
+
+print(f"Sum on axis 0: {numbers.sum(axis=0)}")
+print(f"Sum on axis 1: {numbers.sum(axis=1)}")
