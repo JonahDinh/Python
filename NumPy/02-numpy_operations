@@ -1,5 +1,5 @@
 import numpy as np
-from numpyhelpers import printnp
+from numpyhelpers import printnp, time_f
 
 # Arithmetic operations are applied elementwise. A new array is created and filled with the result
 a = np.array([10, 20, 30, 40])
@@ -66,3 +66,46 @@ print(numbers.flatten())
 
 print(f"Sum on axis 0: {numbers.sum(axis=0)}")
 print(f"Sum on axis 1: {numbers.sum(axis=1)}")
+
+# There are lots and lots of numpy functions - most of which operate elementwise, but some operate on while arrays
+# If you're looking for a mathematical function, it's probably
+
+# There's a whole class of functions called "ufunc"s or universal functions which opperate on ndarrays,
+# in an element-by-element fashion
+numbers = np.array([[60, -1, 20], [-22, 545, -292]])
+print(np.abs(numbers))
+
+# You can use as type to try and convert between types for an entitre array
+string_as_numbers = np.array(['242','532','3425','22','41'])
+printnp(string_as_numbers)
+numbers = string_as_numbers.astype("int32")
+printnp(numbers)
+
+# What if none of numpy's default functions fit? 
+
+def add_3(number):
+    return number + 3
+
+print(add_3(7))
+print(add_3(numbers))
+
+def double_odd_numbers(number):
+    if number % 2 == 0:
+        return number
+    else:
+        return number * 2
+    
+print(double_odd_numbers(7))
+print(double_odd_numbers(6))
+#print(double_odd_numbers(numbers))
+
+# You can vectorize a fucntion to change it to a function that when you pass in an array it runs the fucntion on each elelment individually 
+vectorized_double_odd_numbers = np.vectorize(double_odd_numbers)
+print(vectorized_double_odd_numbers(numbers))
+
+thousand = np.arange(1000)
+def sum_array(array):
+    return array.sum()
+
+result = time_f(sum_array, (thousand))
+print(result)
