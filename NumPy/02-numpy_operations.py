@@ -39,6 +39,7 @@ incompatible = np.array([
         [1],[1],[1],[1],[1]
     ],
 ])
+print("Incompatible")
 printnp(incompatible)
 # This will not work! ones is treated as because it has one less dimension,
 # and isn't compatible with (2,6,1)
@@ -108,4 +109,4 @@ def sum_array(array):
     return array.sum()
 
 result = time_f(sum_array, (thousand))
-print(result)
+print(result) 
