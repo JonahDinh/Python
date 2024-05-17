@@ -110,10 +110,19 @@ def display_magnitude_stats():
 
     print(f"Mode Magnitude: {vals[mode].flatten().tolist()}")
 
+
+# https://matplotlib.org/stable/users/explain/quick_start.html
 def plot_quake_map():
     """ Display a scatter map of the filtered quakes where the size of the dots is equal to the magnitude of the quakes scaled. """
-    pass
+    filtered_quakes = quake_data.get_filtered_array()
+    # s: ArrayLike | None = None,
+    plt.scatter(filtered_quakes['long'], filtered_quakes['lat'], s=filtered_quakes['mag']*10)
+    plt.xlabel('Longitude')
+    plt.ylabel('Latitude')
+    plt.title('Filtered Earthquake Map')
+    plt.show()
 
+# https://matplotlib.org/stable/users/explain/quick_start.html
 def plot_magnitude_chart():
     """ Display a bar chart of how many quakes of each whole number magnitude occurred amongst the filtered quakes. """
     pass
