@@ -39,7 +39,7 @@ class QuakeData:
         """"""
         self._location_filter = (latitude, longitude, distance)
 
-    def set_property_filter(self, magnitude, felt, significance):
+    def set_property_filter(self, magnitude = None, felt = None, significance = None):
         """"""
         if magnitude is None and felt is None and significance is None:
             raise ValueError("At least one parameter must be supplied.")
@@ -87,7 +87,7 @@ class QuakeData:
             if feature.get('type') == "Feature":
                 properties = feature.get('properties') #Dictionary
                 geometry = feature.get('geometry') #Dictonary
-                # The all key checks for true of each property
+                # The all key checks for true of each property - This means that it will make sure they have the "key" as well as a value that isn't null
                 if all(key in properties and properties[key] != None for key in ['mag', 'time', 'felt', 'sig', 'type', 'magType']) and geometry.get('type') == 'Point'  and len(geometry.get('coordinates')) == 3:
                     mag = properties['mag']
                     time = properties['time']
@@ -103,6 +103,7 @@ class QuakeData:
         """Apply location and property filters to the given data."""
         if self._location_filter:
             latitude, longitude, distance = self._location_filter
+            # Calling the external calc_distance method - using this as a vectorized call
             quake_data = quake_data[calc_distance(quake_data['lat'], quake_data['long'], latitude, longitude) <= distance]
 
         if self._property_filter:

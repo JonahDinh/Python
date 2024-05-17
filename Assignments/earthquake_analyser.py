@@ -90,6 +90,8 @@ def display_exceptional_quakes():
     """ Display all of the Quakes that satisfy the filters set whose magnitude is greater
     than one standard deviation above the median quake magnitude as user-friendly strings."""
     filtered_data_set = quake_data.get_filtered_array()
+    filtered_data_set = [quake for quake in filtered_data_set if quake['mag'] > (np.std(filtered_data_set['mag']) + np.mean(filtered_data_set['mag']))]
+
     for quake in filtered_data_set:
         print (quake[0])
 
@@ -114,9 +116,9 @@ def display_magnitude_stats():
 # https://matplotlib.org/stable/users/explain/quick_start.html
 def plot_quake_map():
     """ Display a scatter map of the filtered quakes where the size of the dots is equal to the magnitude of the quakes scaled. """
-    filtered_quakes = quake_data.get_filtered_array()
+    filtered_data_set = quake_data.get_filtered_array()
     # s: ArrayLike | None = None,
-    plt.scatter(filtered_quakes['long'], filtered_quakes['lat'], s=filtered_quakes['mag']*10)
+    plt.scatter(filtered_data_set['long'], filtered_data_set['lat'], s=filtered_data_set['mag']*10)
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
     plt.title('Filtered Earthquake Map')
@@ -125,7 +127,9 @@ def plot_quake_map():
 # https://matplotlib.org/stable/users/explain/quick_start.html
 def plot_magnitude_chart():
     """ Display a bar chart of how many quakes of each whole number magnitude occurred amongst the filtered quakes. """
-    pass
+    filtered_data_set = quake_data.get_filtered_array()
+    filtered_data_set['mag'] = np.floor(filtered_data_set['mag'])
+
 
 def quit():
     """ Quit the program. """
