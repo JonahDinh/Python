@@ -3,11 +3,11 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import json
 import sys
-import getopt
 from earthquakes import Quake, QuakeData, calc_distance
 
 file_path = ".\earthquakes.geojson"
 
+# https://www.askpython.com/python/python-command-line-arguments
 if len(sys.argv) > 1:
     file_path = sys.argv[1]
 
@@ -25,30 +25,90 @@ print("Earthquake Analyser")
 
 def set_location_filter():
     """ Ask the user for a latitude, longitude, and distance and set a location filter on QuakeData accordingly."""
-    pass
+    latitude = float(input("Enter latitude: "))
+    longitude = float(input("Enter longitude: "))
+    distance = float(input("Enter distance: "))
+    quake_data.set_location_filter(latitude, longitude, distance)
 
 def set_property_filter():
     """ Ask the user for minimum values for significance, felt, and magnitude and set the property filter on QuakeData accordingly.
     Warn the user if no value is supplied for any of the properties. """
-    pass
+    
+    min = input("Enter minimum magnitude:")
+
+    if min:
+        try:
+            mag = float(min)
+        except ValueError:
+            print("Warning: Magnitude should be a numeric value.")
+            return
+    else:
+        mag = None
+        print("Warning: No magnitude filter has been set.")
+    
+    min = input("Enter minimum felt:")
+
+    if min:
+        try:
+            felt = int(min)
+        except ValueError:
+            print("Warning: Felt should be an integer value.")
+            return
+    else:
+        felt = None
+        print("Warning: No felt filter has been set.")
+
+    min = input("Enter minimum significance:")
+    if min:
+        try:
+            sig = int(min)
+        except ValueError:
+            print("Warning: Significance should be an integer value.")
+            return
+    else:
+        sig = None
+
+    # Set the property filter
+    if mag is None and felt is None and sig is None:
+        print("Warning: No filter has been set.")
+    else:
+        quake_data.set_property_filter(mag, felt, sig)
 
 def clear_filters():
     """ Clear the filters on the QuakeData object and display the text 'cleared'."""
+    quake_data.clear_filter()
+    print("Cleared the filters!")
     pass
 
 def display_quakes():
     """ Display all of the Quakes that satisfy the filters set as user-friendly strings."""
-    pass
+    filtered_data_set = quake_data.get_filtered_array()
+    for quake in filtered_data_set:
+        print (quake[0])
 
 def display_exceptional_quakes():
     """ Display all of the Quakes that satisfy the filters set whose magnitude is greater
     than one standard deviation above the median quake magnitude as user-friendly strings."""
-    pass
+    filtered_data_set = quake_data.get_filtered_array()
+    for quake in filtered_data_set:
+        print (quake[0])
+
 
 def display_magnitude_stats():
     """ Display the mean, median, and standard deviation of the magnitude of the filtered quakes. 
     Display the mode of the magnitude when magnitude is rounded down to whole numbers. """
-    pass
+    filtered_data_set = quake_data.get_filtered_array()
+
+    print(f"\nMean Magnitude: {np.mean(filtered_data_set['mag'])}")
+    print(f"Median Magnitude: {np.median(filtered_data_set['mag'])}")
+    print(f"Standard Deviation of Magnitude: {np.std(filtered_data_set['mag'])}")
+
+    # https://www.statology.org/numpy-mode/ Used this to help understand how to find the mode.
+    filtered_data_set['mag'] = np.floor(filtered_data_set['mag'])
+    vals, counts = np.unique(filtered_data_set['mag'], return_counts=True)
+    mode = np.argwhere(counts == np.max(counts))
+
+    print(f"Mode Magnitude: {vals[mode].flatten().tolist()}")
 
 def plot_quake_map():
     """ Display a scatter map of the filtered quakes where the size of the dots is equal to the magnitude of the quakes scaled. """
@@ -60,8 +120,8 @@ def plot_magnitude_chart():
 
 def quit():
     """ Quit the program. """
-    print("Thanks! See you again soon.")
-    sys.exit()
+    print("\nThanks! See you again soon.")
+    exit()
 
 ######### Prompting Users #########
 
