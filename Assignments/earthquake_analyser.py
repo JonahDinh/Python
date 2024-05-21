@@ -25,9 +25,33 @@ print("Earthquake Analyser")
 
 def set_location_filter():
     """ Ask the user for a latitude, longitude, and distance and set a location filter on QuakeData accordingly."""
-    latitude = float(input("Enter latitude: "))
-    longitude = float(input("Enter longitude: "))
-    distance = float(input("Enter distance: "))
+    while True: #Loop for a valid answer
+        try:
+            latitude = float(input("Enter latitude (-90 to 90): "))
+            if latitude < -90 or latitude > 90:
+                raise ValueError("Latitude must be between -90 and 90.")
+            break
+        except ValueError as e:
+            print(f"Invalid latitude, please try again.")
+
+    while True:
+        try:
+            longitude = float(input("Enter longitude (-180 to 180): "))
+            if longitude < -180 or longitude > 180:
+                raise ValueError("Longitude must be between -180 and 180.")
+            break
+        except ValueError:
+            print(f"Invalid longitude, please try again.")
+
+    while True:
+        try:
+            distance = float(input("Enter distance (positive number): "))
+            if distance < 0:
+                raise ValueError("Distance must be a positive number.")
+            break
+        except ValueError:
+            print(f"Invalid distance, please try again.")
+
     quake_data.set_location_filter(latitude, longitude, distance)
 
 def set_property_filter():
@@ -117,8 +141,10 @@ def display_magnitude_stats():
 def plot_quake_map():
     """ Display a scatter map of the filtered quakes where the size of the dots is equal to the magnitude of the quakes scaled. """
     filtered_data_set = quake_data.get_filtered_array()
-    # s: ArrayLike | None = None,
-    plt.scatter(filtered_data_set['long'], filtered_data_set['lat'], s=filtered_data_set['mag']*100, alpha=0.5)
+    # s: setting the size to the value of the magnitude cubed * 10.
+    sizes = (filtered_data_set['mag'] ** 2) * 5
+    plt.scatter(filtered_data_set['lat'], filtered_data_set['long'], s=sizes, alpha=0.5)
+    #plt.scatter(filtered_data_set['long'], filtered_data_set['lat'], s=filtered_data_set['mag']*100, alpha=0.5)
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
     plt.title('Filtered Earthquake Map')
