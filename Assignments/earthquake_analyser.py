@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 from pathlib import Path
 import json
 import sys
-from earthquakes import Quake, QuakeData, calc_distance
+from earthquakes import QuakeData
 
 file_path = ".\earthquakes.geojson"
 
@@ -118,7 +118,7 @@ def plot_quake_map():
     """ Display a scatter map of the filtered quakes where the size of the dots is equal to the magnitude of the quakes scaled. """
     filtered_data_set = quake_data.get_filtered_array()
     # s: ArrayLike | None = None,
-    plt.scatter(filtered_data_set['long'], filtered_data_set['lat'], s=filtered_data_set['mag']*10)
+    plt.scatter(filtered_data_set['long'], filtered_data_set['lat'], s=filtered_data_set['mag']*100, alpha=0.5)
     plt.xlabel('Longitude')
     plt.ylabel('Latitude')
     plt.title('Filtered Earthquake Map')
@@ -128,7 +128,19 @@ def plot_quake_map():
 def plot_magnitude_chart():
     """ Display a bar chart of how many quakes of each whole number magnitude occurred amongst the filtered quakes. """
     filtered_data_set = quake_data.get_filtered_array()
-    filtered_data_set['mag'] = np.floor(filtered_data_set['mag'])
+    
+    magnitudes = np.floor(filtered_data_set['mag'])
+
+    # Get the unique magnitudes and their counts, same way done in mean claculation
+    unique_magnitudes, counts = np.unique(magnitudes, return_counts=True)
+    
+    # Plot the bar chart
+    plt.bar(unique_magnitudes, counts, align='center', alpha=0.7)
+    plt.xlabel('Magnitude')
+    plt.ylabel('Number of Earthquakes')
+    plt.title('Number of Earthquakes by Magnitude')
+    plt.xticks(unique_magnitudes)
+    plt.show()
 
 
 def quit():

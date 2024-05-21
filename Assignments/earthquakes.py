@@ -8,6 +8,7 @@ path = Path("./my_setting.json")
 def calc_distance(lat1, long1, lat2, long2):
     """Returns the distance, in kilometers, between two lat/long coordinates"""
     #Using haversine formula, converting the JS to Python
+    # https://www.movable-type.co.uk/scripts/latlong.html
     # const R = 6371e3; // metres
     R = 6371e3
     # const φ1 = lat1 * Math.PI/180; // φ, λ in radians
@@ -36,17 +37,17 @@ class QuakeData:
         self._property_filter = None
 
     def set_location_filter(self, latitude, longitude, distance):
-        """"""
+        """Setting the location filter"""
         self._location_filter = (latitude, longitude, distance)
 
     def set_property_filter(self, magnitude = None, felt = None, significance = None):
-        """"""
+        """Setting the property filter. Set the defaults to None"""
         if magnitude is None and felt is None and significance is None:
             raise ValueError("At least one parameter must be supplied.")
         self._property_filter = (magnitude, felt, significance)
 
     def clear_filter(self):
-        """"""
+        """Setting the filters to null"""
         self._location_filter = None
         self._property_filter = None
 
@@ -97,6 +98,10 @@ class QuakeData:
                     coords = geometry['coordinates']
                     quake_instance = Quake(mag, time, felt, sig, q_type, coords)
                     quakeDataList.append((quake_instance, mag, felt, sig, coords[0], coords[1]))
+        
+        #Sort the list based of the magnitude
+        quakeDataList.sort(key=lambda quake: quake[1])
+
         return np.array(quakeDataList, dtype=data_types)
     
     def _apply_filters(self, quake_data):
